@@ -1,0 +1,47 @@
+
+  Host setup:       x86_64-unknown-linux-gnu
+  Install prefix:   /opt/curl
+  Compiler:         gcc
+   CFLAGS:          -Werror-implicit-function-declaration -O2 -std=gnu89 -pedantic -Wall -W -Wpointer-arith -Wwrite-strings -Wunused -Wshadow -Winline -Wnested-externs -Wmissing-declarations -Wmissing-prototypes -Wno-long-long -Wbad-function-cast -Wfloat-equal -Wno-multichar -Wsign-compare -Wundef -Wno-format-nonliteral -Wendif-labels -Wstrict-prototypes -Wdeclaration-after-statement -Wold-style-definition -Wstrict-aliasing=3 -Wcast-align -Wtype-limits -Wold-style-declaration -Wmissing-parameter-type -Wempty-body -Wclobbered -Wignored-qualifiers -Wconversion -Wno-sign-conversion -Wvla -ftree-vrp -Wdouble-promotion -Wformat=2 -Wno-system-headers -pthread
+   CPPFLAGS:        -isystem /opt/tongsuo/include -DOPENSSL_SUPPRESS_DEPRECATED
+   LDFLAGS:         -Wl,-rpath=/opt/tongsuo/lib64 -L/opt/tongsuo/lib64
+   LIBS:            -lssl -lcrypto -lssl -lcrypto
+
+  curl version:     7.86.1-DEV
+  SSL:              enabled (OpenSSL v3+)
+  SSH:              no      (--with-{libssh,libssh2})
+  zlib:             no      (--with-zlib)
+  brotli:           no      (--with-brotli)
+  zstd:             no      (--with-zstd)
+  GSS-API:          no      (--with-gssapi)
+  GSASL:            no      (libgsasl not found)
+  TLS-SRP:          enabled
+  resolver:         POSIX threaded
+  IPv6:             enabled
+  Unix sockets:     enabled
+  IDN:              no      (--with-{libidn2,winidn})
+  Build libcurl:    Shared=yes, Static=yes
+  Built-in manual:  enabled
+  --libcurl option: enabled (--disable-libcurl-option)
+  Verbose errors:   enabled (--disable-verbose)
+  Code coverage:    disabled
+  SSPI:             no      (--enable-sspi)
+  ca cert bundle:   /etc/pki/tls/certs/ca-bundle.crt
+  ca cert path:     no
+  ca fallback:      no
+  LDAP:             no      (--enable-ldap / --with-ldap-lib / --with-lber-lib)
+  LDAPS:            no      (--enable-ldaps)
+  RTSP:             enabled
+  RTMP:             no      (--with-librtmp)
+  PSL:              no      (libpsl not found)
+  Alt-svc:          enabled (--disable-alt-svc)
+  Headers API:      enabled (--disable-headers-api)
+  HSTS:             enabled (--disable-hsts)
+  HTTP1:            enabled (internal)
+  HTTP2:            no      (--with-nghttp2, --with-hyper)
+  HTTP3:            no      (--with-ngtcp2, --with-quiche --with-msh3)
+  ECH:              no      (--enable-ech)
+  WebSockets:       no      (--enable-websockets)
+  Protocols:        DICT FILE FTP FTPS GOPHER GOPHERS HTTP HTTPS IMAP IMAPS MQTT POP3 POP3S RTSP SMB SMBS SMTP SMTPS TELNET TFTP
+  Features:         AsynchDNS HSTS HTTPS-proxy IPv6 Largefile NTLM NTLM_WB SSL TLS-SRP UnixSockets alt-svc
+

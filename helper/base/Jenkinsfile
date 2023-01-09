@@ -1,0 +1,73 @@
+pipeline {
+  agent none
+
+  environment {
+	  RELEASE_SITE_DIR = "https://10.7.202.199/filestore/ngx-deps/"
+  }
+
+  options {
+	  parallelsAlwaysFailFast()
+  }
+  stages {
+
+
+    stage("分支检出 (CheckOut)") {
+      agent {
+        docker {
+           //image '10.11.6.26/amd64/centos7:latest'
+           image '10.7.202.199/centos7-node'
+           label 'master'
+    //        args  '-v `pwd`:/home/ngos/workspace -w /home/ngos/workspace'
+        }
+      }
+
+      steps {
+
+        echo 'checkout all branch Jenkinsfile'
+//         checkout([
+//             $class: 'GitSCM',
+//             branches: [[name: '*/tongsuo']],
+//             userRemoteConfigs: [[url: 'http://10.7.202.171:10880/superman/nginx-bdwaf.git']]
+//         ])
+        sh "echo '12312421432432' >> test0001"
+        sh "echo '12312421432432222' >> test0002"
+        sh "ls -alh"
+        sh "uname -a"
+        sh 'pwd'
+      }
+    }
+
+      stage('操作222222') {
+          agent {
+            docker {
+               //image '10.11.6.26/amd64/centos7:latest'
+               image 'ccr.ccs.tencentyun.com/topsec/ssh-node:oe2203'
+               label 'bd_tech_171_oe2203_host'
+        //        args  '-v `pwd`:/home/ngos/workspace -w /home/ngos/workspace'
+            }
+          }
+          steps {
+//               dir("/usr/src/app/workspace/test1111"){
+//                 sh 'ls -alh'
+//               }
+//               node('master') {
+//                 dir("/usr/src/app/workspace/test1111") {
+                    sh "ls -alh ."
+                    sh "uname -a"
+                    sh 'pwd'
+
+//                 }
+//               }
+          }
+       }
+
+
+ }
+
+  post {
+        always {
+            echo "Topsec BigData Licence v1 For BdTech. IC"
+        }
+    }
+
+}

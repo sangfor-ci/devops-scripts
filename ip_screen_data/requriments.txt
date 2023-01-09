@@ -1,0 +1,7 @@
+# coding:utf-8
+#--trusted-host mirrors.aliyun.com --index-url http://mirrors.aliyun.com/pypi/simple/
+--trusted-host https://repo.huaweicloud.com -i https://repo.huaweicloud.com/repository/pypi/simple
+# --index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+maxminddb==2.2.0
+netaddr==0.8.0

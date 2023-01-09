@@ -1,0 +1,92 @@
+pipeline {
+//   agent {
+//       node {
+//           label 'centos7-jdk11-devops'
+//       }
+//   }
+  agent any
+  environment {
+	  RELEASE_SITE_DIR = "https://10.7.202.199/filestore/ngx-deps/"
+      BUILD_COMP_TAG = "websrv-xc.x84_64"
+  }
+
+  options {
+	  parallelsAlwaysFailFast()
+  }
+
+
+  stages {
+
+    stage("分支检出") {
+      steps {
+        checkout([
+          $class: 'GitSCM',
+          branches: [[name: GIT_BUILD_REF]],
+          userRemoteConfigs: [[
+            url: GIT_REPO_URL,
+            credentialsId: CREDENTIALS_ID
+        ]]])
+      }
+    }
+
+    stage('环境测试') {
+      parallel {
+
+        stage('1. 查看和验证环境') {
+          steps {
+            script {
+              sh 'uname -a'
+//               sh "sed -i 's/\r//' ./auxil/rhel7_prepare.sh && bash ./auxil/rhel7_prepare.sh"
+            }
+          }
+        }
+
+        stage('测试环境变量OK') {
+          when {
+            branch 'dev'
+            environment name: 'DOCKER_IMAGE_TAG', value: 'dev'
+          }
+        steps {
+            script {
+              sh "echo 1"
+              sh "echo 22"
+              sh "echo 333"
+            }
+          }
+        }
+
+      }
+    }
+
+	stage('测试registry') {
+    steps {
+	    retry(3) {
+            sleep(5)
+            timeout(time: 3, unit: "SECONDS") {
+                sh 'docker login --username=100024023438 ccr.ccs.tencentyun.com --password String123.'
+          }
+        }
+      }
+    }
+
+    stage('构建组件包') {
+      steps {
+        sh "docker build -t ccr.ccs.tencentyun.com/topsec/dev-tool:dev20221212 ."
+      }
+    }
+
+    stage('构建后的操作') {
+      steps {
+        sh "docker push ccr.ccs.tencentyun.com/topsec/dev-tool:dev20221212"
+      }
+    }
+
+  }
+
+  post {
+        always {
+            echo "Topsec BigData Licence v1 For BdTech. IC"
+        }
+    }
+
+}

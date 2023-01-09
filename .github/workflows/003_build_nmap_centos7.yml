@@ -1,0 +1,79 @@
+#=====================================================================================
+# https://github.com/sangfor-ci/github-ci-demo/
+# Description: Build BD Comps Based Centos7.9.2009 x86
+# Source code repository: https://github.com/sangfor-ci/github-ci-demo/ / Branch: master
+#=====================================================================================
+
+name: Build Nmap
+
+on:
+    repository_dispatch:
+    workflow_dispatch:
+    schedule:
+      - cron: '20 16 * * *' # Run every day at 16:20 UTC / 8:20 PST
+
+env:
+    #REPO_URL:  github.com/sangfor-ci/github-ci-demo.git
+    #REPO_BRANCH: master
+    BUILD1_SH: ./nmap/build.sh
+    DELIVER1_SH: ./tools/007_github_api_tools.sh
+    NMAP_VERSION: 7.93
+    ARTIFACT_REPO_DIR: /workdir/release/
+    TZ: Asia/Shanghai
+
+jobs:
+    build:
+        runs-on: ubuntu-22.04
+        container: actanble/centos7-base:amd64
+        #if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Initialization environment
+              id: init
+              env:
+                  BUILD_AUTHOR: actanble
+              run: |
+                  uname -a
+                  cat /etc/*-release
+                  pwd
+                  ls -alh
+                  mkdir -p /workdir
+                  git config --global user.name "ci"
+                  git config --global user.email 'ci@example.com'
+                  ln -sf /workdir ${PWD}
+                  echo "status=success" >> ${GITHUB_OUTPUT}
+
+            - name: Start Build Nmap
+              run: |
+                  sed -i 's/\r//' ${BUILD1_SH}
+                  chmod +x ${BUILD1_SH}
+                  ${GITHUB_WORKSPACE}/${BUILD1_SH}
+
+            - name: Clean up server space (N)
+              if: ${{ steps.compile.outputs.status }} == 'success' && !cancelled()
+              run: |
+                  cd ${GITHUB_WORKSPACE}
+                  df -hT ${PWD}
+
+            - name: Upload artifact to Repo
+              if: ${{ steps.compile.outputs.status }} == 'success' && !cancelled()
+              run: |
+                sed -i 's/\r//' ${DELIVER1_SH}
+                /bin/bash ${DELIVER1_SH} upload_dir ${ARTIFACT_REPO_DIR}
+
+            - name: Upload the packaged firmware to Release
+              uses: ncipollo/release-action@main
+              if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
+              with:
+                  tag: ${{ steps.compile.outputs.build_tag }}
+                  artifacts: ${{ env.ARTIFACT_REPO_DIR }}/*
+                  allowUpdates: true
+                  token: ${{ secrets.GH_TOKEN }}
+                  body: |
+                      This is Nmap Gnerric For x86 environment Build in Centos7.9.2009
+                      * Firmware information
+                      * No any describtion. Build by xx
+
